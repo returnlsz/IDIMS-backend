@@ -39,8 +39,39 @@ namespace test.Service.Token
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public string DecodeToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_JWTToken.SecurityKey);
 
-     
+            TokenValidationParameters validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = _JWTToken.Issuer,
+
+                ValidateAudience = true,
+                ValidAudience = _JWTToken.Audience,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+
+                ClockSkew = TimeSpan.Zero // No clock skew
+            };
+
+            SecurityToken validatedToken;
+            ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+
+            // 获取用户的 ID
+            var userIdClaim = claimsPrincipal.FindFirst("id");
+            if (userIdClaim != null)
+            {
+                string userId = userIdClaim.Value;
+                return userId;
+            }
+            else
+            {
+                return ""; // 用户 ID 未找到
+            }
+        }
     }
-
 }

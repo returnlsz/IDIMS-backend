@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kSJ7W+98ckZpXcGfOA7TnoqIZmW/qZgqaS9yoj0lX3CQqZORYEFT22UIZLe68FhFSbj57N+oau7IDnWPpbgh5A==",
+  "dgSpecHash": "PeAt4+5C7axojktMj0BNsgHKs4M54Absgl5fnHlcnRxryloiw2KvMYD0KytNcZL1fiLafa2VoQMy2JF27ytPZg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Leon\\Desktop\\数据库课设\\mygit\\IDIMS\\后端\\test\\test.WebAPI.csproj",
+  "projectFilePath": "C:\\Users\\Leon\\Desktop\\数据库课设\\后端\\后端\\test\\test.WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Leon\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Leon\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -10,6 +10,6 @@ namespace test.Service.Token
     public interface IJWTService
     {
         string GetToken(Users user);
+        string DecodeToken(string token);
     }
-  
 }
