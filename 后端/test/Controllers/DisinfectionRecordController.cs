@@ -18,8 +18,8 @@ namespace test.WebAPI.Controllers
             _disinfectionService = disinfectionService;
         }
 
-        [HttpPost]
-        public ActionResult<JsonResult> AddDisinfectionRecord([FromBody]  DisinfectionRecordInputDto input)
+        [HttpPost("AddDisinfectionRecord")]
+        public ActionResult<string> AddDisinfectionRecord([FromBody]  DisinfectionRecordInputDto input)
         {
             if( input == null)
             {
@@ -39,20 +39,6 @@ namespace test.WebAPI.Controllers
                 return Ok("Disinfection record added successfully");
             else
                 return BadRequest("Fail to insert into database");
-        }
-
-        [HttpGet]
-        public ActionResult<JsonResult> GetDisinfectionRecord()
-        {
-            var data =  _disinfectionService.GetAllRecords();
-            if(data == null)
-            {
-                return BadRequest("no records");
-            }
-            else
-            {
-                return Ok(data);    
-            }
         }
     }
 

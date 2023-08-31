@@ -15,9 +15,5 @@ namespace test.Service.Management.Notice
     {
         bool UpdateNotice(UpdateDto noticeDto);
     }
-    public interface IGetAllNotice
-    {
-        List<Tuple<string, string, int>> GetAllNotice();
-    }
     
 }

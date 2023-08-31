@@ -9,7 +9,7 @@ using test.Module.Entities;
 using test.Common.Db;
 namespace test.Service.Management
 {
-    public class Solution : ICreateNotice, IUpdateNotice,IGetAllNotice
+    public class Solution : ICreateNotice, IUpdateNotice
     {
         public bool CreateNotice(NoticeDto noticeDto,string id)
         {
@@ -43,18 +43,6 @@ namespace test.Service.Management
                 Console.WriteLine("Error:"+ex.Message);
                 return false;
             }
-        }
-
-        public List<Tuple<string, string, int>> GetAllNotice()
-        {
-            var columnsData = DbContext.db.Queryable<notice_info>().Select(it => new {it.name,it.content,it.notice_id}).ToList();
-            List<Tuple<string, string, int>> dataArray = new List<Tuple<string, string, int>>();
-            foreach (var data in columnsData)
-            {
-                dataArray.Add(new Tuple<string, string, int>(data.name, data.content, data.notice_id));
-            }
-
-            return dataArray;
         }
 
         public bool UpdateNotice(UpdateDto noticeDto)

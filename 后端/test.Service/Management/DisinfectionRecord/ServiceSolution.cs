@@ -35,11 +35,5 @@ namespace test.Service.Management.DisinfectionRecord
                 return false;
             }
         }
-
-        public List<disinfection_record> GetAllRecords()
-        {
-            var data = DbContext.db.Queryable<disinfection_record>().Select(it => new disinfection_record { date=it.date,pos_id=it.pos_id,disinfection=it.disinfection}).ToList();
-            return data;
-        }
     }
 }

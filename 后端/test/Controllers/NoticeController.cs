@@ -21,21 +21,18 @@ namespace test.WebAPI.Controllers
         private readonly IUpdateNotice _updateNotice;
         private readonly IUserService _userService;
         private readonly IJWTService _jwtService;
-        private readonly IGetAllNotice _findAllNotice;
         public NoticeController(ICreateNotice createNotice,IUpdateNotice updateNotice,
-                                IUserService userService,IJWTService jwtService,
-                                IGetAllNotice findAllNotice)
+                                IUserService userService,IJWTService jwtService)
         {
             _createNotice = createNotice;
             _updateNotice = updateNotice;
             _userService = userService;
             _jwtService = jwtService;
-            _findAllNotice = findAllNotice;
         }
 
         [HttpPost]
         [Authorize]
-        public ActionResult<JsonResult> CreateNotice([FromBody] NoticeDto input)
+        public ActionResult<string> CreateNotice([FromBody] NoticeDto input)
         {
             if (input == null)
             {
@@ -60,7 +57,7 @@ namespace test.WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<JsonResult> UpdateNotice([FromBody] UpdateDto input)
+        public ActionResult<string>UpdateNotice([FromBody] UpdateDto input)
         {
             if (input == null)
             {
@@ -78,25 +75,6 @@ namespace test.WebAPI.Controllers
                 return Ok("Success");
             else
                 return BadRequest("Fail to Update");
-        }
-
-        [HttpGet]
-        public ActionResult<JsonResult> SendAllNotice()
-        {
-            List<Tuple<string, string, int>> result = _findAllNotice.GetAllNotice();
-            if (result == null)
-            {
-                return BadRequest("empty notice");
-            }
-            else
-            {
-                var apiresult = new
-                {
-                    message = "success",
-                    MessageDetail = result,
-                };
-                return Ok(apiresult);
-            }
         }
     }
 }

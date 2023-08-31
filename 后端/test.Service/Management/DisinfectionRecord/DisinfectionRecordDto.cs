@@ -8,7 +8,7 @@ namespace test.Service.User.Dto
 {
     public class DisinfectionRecordInputDto
     {
-        public string? date { get; set; }
+        public DateTime? date { get; set; }
         public string? pos_id { get; set; }
         public string? disinfection { get; set; }
     }

@@ -10,6 +10,5 @@ namespace test.Service.Management.DisinfectionRecord
     public interface IDisinfectionService
     {
         bool AddRecord(disinfection_record record);
-        List<disinfection_record> GetAllRecords();
     }
 }

@@ -37,7 +37,6 @@ builder.Services.AddTransient<IDisinfectionService,ServiceSolution>();
 //添加公告相关依赖
 builder.Services.AddTransient<ICreateNotice, Solution>();
 builder.Services.AddTransient<IUpdateNotice, Solution>();
-builder.Services.AddTransient<IGetAllNotice, Solution>();
 
 //添加User依赖
 builder.Services.AddTransient<IUserService, UserService>();

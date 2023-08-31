@@ -13,7 +13,7 @@ namespace test.Module.Entities
     public class disinfection_record
     {
         [SugarColumn(IsPrimaryKey = true)]
-        public string? date { get; set; }
+        public DateTime? date { get; set; }
 
         [SugarColumn(IsPrimaryKey = true)]
         public string? pos_id { get; set; }
