@@ -9,6 +9,7 @@ using test.Service.User;
 using test.Service.Management;
 using test.Service.Management.DisinfectionRecord;
 using test.Service.Management.Notice;
+using test.Service.Management.WorkArrange;
 
 
 
@@ -37,6 +38,9 @@ builder.Services.AddTransient<IDisinfectionService,ServiceSolution>();
 //添加公告相关依赖
 builder.Services.AddTransient<ICreateNotice, Solution>();
 builder.Services.AddTransient<IUpdateNotice, Solution>();
+
+//添加工作处理相关依赖
+builder.Services.AddTransient<IWAInterface, WASolution>();
 
 //添加User依赖
 builder.Services.AddTransient<IUserService, UserService>();

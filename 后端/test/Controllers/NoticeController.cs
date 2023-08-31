@@ -32,7 +32,7 @@ namespace test.WebAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult<string> CreateNotice([FromBody] NoticeDto input)
+        public ActionResult<object> CreateNotice([FromBody] NoticeDto input)
         {
             if (input == null)
             {
@@ -57,7 +57,8 @@ namespace test.WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<string>UpdateNotice([FromBody] UpdateDto input)
+        [Authorize]
+        public ActionResult<object> UpdateNotice([FromBody] UpdateDto input)
         {
             if (input == null)
             {

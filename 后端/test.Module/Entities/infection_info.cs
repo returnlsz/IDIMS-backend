@@ -16,6 +16,6 @@ namespace test.Module.Entities
         public string? pos_id { get; set; }
         [SugarColumn(IsPrimaryKey = true)]
         public string? time { get; set; }
-        public int infectd_number { get; set; }
+        public int infected_number { get; set; }
     }
 }

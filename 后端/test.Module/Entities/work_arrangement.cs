@@ -15,7 +15,7 @@ namespace test.Module.Entities
         [SugarColumn(IsPrimaryKey = true)]
         public string? pos_id { get; set; }
         [SugarColumn(IsPrimaryKey = true)]
-        public string? time { get; set; }
+        public string? ddl_time { get; set; }
         [SugarColumn(IsPrimaryKey = true)]
         public string? type { get; set; }
     }

@@ -18,8 +18,9 @@ namespace test.WebAPI.Controllers
             _disinfectionService = disinfectionService;
         }
 
-        [HttpPost("AddDisinfectionRecord")]
-        public ActionResult<string> AddDisinfectionRecord([FromBody]  DisinfectionRecordInputDto input)
+        [HttpPost]
+        [Authorize]
+        public ActionResult<object> AddDisinfectionRecord([FromBody]  DisinfectionRecordInputDto input)
         {
             if( input == null)
             {

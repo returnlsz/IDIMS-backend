@@ -11,5 +11,7 @@ namespace test.Service.Token
     {
         string GetToken(Users user);
         string DecodeToken(string token);
+        
+       
     }
 }
