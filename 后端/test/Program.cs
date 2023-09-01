@@ -10,6 +10,7 @@ using test.Service.Management;
 using test.Service.Management.DisinfectionRecord;
 using test.Service.Management.Notice;
 using test.Service.Management.WorkArrange;
+using test.Service.Management.GovWithInfectionInfo;
 
 
 
@@ -41,6 +42,9 @@ builder.Services.AddTransient<IUpdateNotice, Solution>();
 
 //添加工作处理相关依赖
 builder.Services.AddTransient<IWAInterface, WASolution>();
+
+//添加查询感染相关依赖
+builder.Services.AddTransient<IGWIInterface, GWISolution>();
 
 //添加User依赖
 builder.Services.AddTransient<IUserService, UserService>();

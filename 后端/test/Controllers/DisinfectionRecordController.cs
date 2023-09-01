@@ -4,6 +4,7 @@ using test.Common;
 using test.Service.Management.DisinfectionRecord;
 using test.Module.Entities;
 using test.Service.User.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace test.WebAPI.Controllers
 {
@@ -41,6 +42,8 @@ namespace test.WebAPI.Controllers
             else
                 return BadRequest("Fail to insert into database");
         }
+
+        
     }
 
 }

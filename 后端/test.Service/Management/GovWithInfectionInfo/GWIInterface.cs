@@ -8,6 +8,7 @@ namespace test.Service.Management.GovWithInfectionInfo
 {
     public interface IGWIInterface
     {
-        List<InfectPeopleNumber> GetInfectPeopleNumbers(CheckType checkType);
+        List<InfectPeopleNumber> GetInfectPeopleNumbers(CheckType checkType,DateTime time);
+        List<DayInfectNumber> GetDayInfectNumbers(DateTime time);
     }
 }

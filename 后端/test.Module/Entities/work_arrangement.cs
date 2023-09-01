@@ -13,10 +13,15 @@ namespace test.Module.Entities
     public class work_arrangement
     {
         [SugarColumn(IsPrimaryKey = true)]
+        public string worker_id { get; set; }
+        [SugarColumn(IsPrimaryKey = true)]
+        public string manager_id { get; set; }
+
+
         public string? pos_id { get; set; }
         [SugarColumn(IsPrimaryKey = true)]
-        public string? ddl_time { get; set; }
-        [SugarColumn(IsPrimaryKey = true)]
+        public string ddl_time { get; set; }
+        public string? done_time { get; set; }
         public string? type { get; set; }
     }
 }
