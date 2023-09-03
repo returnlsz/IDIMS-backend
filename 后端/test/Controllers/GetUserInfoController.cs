@@ -8,6 +8,9 @@ using test.Service.User;
 
 namespace test.WebAPI.Controllers
 {
+    /// <summary>
+    /// 获取用户个人信息
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class GetUserInfoController : ControllerBase
@@ -31,19 +34,19 @@ namespace test.WebAPI.Controllers
             }
             catch (SecurityTokenExpiredException)
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "用户凭证已过期，请重新登陆" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "用户凭证已过期，请重新登陆" });
                 return data;
             }
             catch (Exception)
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "无效令牌签名" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "无效令牌签名" });
                 return data;
             }
             string id = _jwtService.DecodeToken(token);
             data= _userService.GetUserInfo(id);
             if (data == "")
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "找不到用户信息" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "找不到用户信息" });
                 return data;
             }
             else

@@ -24,7 +24,6 @@ namespace test.WebAPI.Controllers
             _jwtService = jwtService;
         }
         [HttpGet]
-
         public string GetPosId(string pos_id)
         {
             string data;

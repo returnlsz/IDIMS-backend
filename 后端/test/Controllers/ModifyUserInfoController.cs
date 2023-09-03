@@ -19,6 +19,15 @@ namespace test.WebAPI.Controllers
             _userService = userService;
             _jwtService = jwtService;
         }
+        /// <summary>
+        /// 修改用户信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="gender"></param>
+        /// <param name="password"></param>
+        /// <param name="phone_number"></param>
+        /// <param name="user_address"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         public string ModifyUserInfo(string name,string gender,string password,string phone_number,string user_address)
@@ -31,12 +40,12 @@ namespace test.WebAPI.Controllers
             }
             catch (SecurityTokenExpiredException)
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "用户凭证已过期，请重新登陆" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "用户凭证已过期，请重新登陆" });
                 return data;
             }
             catch (Exception)
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "无效令牌签名" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "无效令牌签名" });
                 return data;
             }
             string id = _jwtService.DecodeToken(token);
@@ -44,12 +53,12 @@ namespace test.WebAPI.Controllers
             int result = _userService.ModifyUserInfo(id, name,gender,password,phone_number,user_address);
             if (result > 0)
             {
-                data = JsonConvert.SerializeObject(new { code = 200, Message = "success" });
+                data = JsonConvert.SerializeObject(new { code = 200, message = "success" });
                 return data;
             }
             else
             {
-                data = JsonConvert.SerializeObject(new { code = 400, ErrorMessage = "数据库原因，更新失败" });
+                data = JsonConvert.SerializeObject(new { code = 400, message = "数据库原因，更新失败" });
                 return data;
             }
         }

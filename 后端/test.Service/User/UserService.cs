@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 using SqlSugar;
 using test.Common.Db;
 using test.Module.Entities;
+using test.Service.Management.UserRouting;
 using test.Service.User.Dto;
 
 namespace test.Service.User
@@ -41,65 +43,7 @@ namespace test.Service.User
             var user = _mapper.Map<Users>(input);
             return user;
         }
-        /// <summary>
-        /// 用户上传抗原的数据库操作
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="test_time"></param>
-        /// <param name="test_result"></param>
-        /// <returns></returns>
-        public int CheckAndUploadantigen(string id, DateTime test_time, string test_result)
-        {
-            ///数据库写入操作
-            ///
-            antigen_record antigen_Record = new antigen_record()
-            {
-                user_id = id,
-                test_time = test_time,
-                test_result = test_result
-            };
-            ///返回受影响条数
-            return DbContext.db.Insertable(antigen_Record).ExecuteCommand();
-        }
-        /// <summary>
-        /// 用户举报的数据库操作
-        /// </summary>
-        /// <returns></returns>
-        public int UserPutReport(DateTime time, string id, string content)
-        {
-            ///先获取report表最后一行message_id的值（最新值）
-            List<string> newest = (List<string>)DbContext.db.Queryable<report_info>().Select(it => it.message_id).ToList();
-            string max = newest.OrderByDescending(x => x).First();
-            int maxint = int.Parse(max);
-            maxint++;
-            max = maxint.ToString();
-            report_info report_Info = new report_info()
-            {
-                time = time,
-                user_id = id,
-                state = 0,
-                message_id = max,
-                content = content
-            };
-            ///返回受影响条数
-            return DbContext.db.Insertable(report_Info).ExecuteCommand();
-        }
-        /// <summary>
-        /// 用户上传行程的数据库操作
-        /// </summary>
-        /// <returns></returns>
-        public int UserUploadRouting(string id, string pos_id, DateTime time)
-        {
-            user_itinerary user_Itinerary = new user_itinerary()
-            {
-                id = id,
-                pos_id = pos_id,
-                time = time
-            };
 
-            ///返回受影响条数
-            return DbContext.db.Insertable(user_Itinerary).ExecuteCommand();
-        }
         /// <summary>
         /// 根据pos_id返回地区信息
         /// </summary>
@@ -122,41 +66,7 @@ namespace test.Service.User
                         .Where(it => it.id == id).ToList();
             return user_Health_state;
         }
-        /// <summary>
-        /// 查询用户所在地的风险等级的数据库操作
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public int GetRiskLevel(string id)
-        {
-            List<user_itinerary> user_Itineraries = new List<user_itinerary>();
-            //查询行程
-            user_Itineraries = DbContext.db.Queryable<user_itinerary>().Where(it => it.id == id).ToList();
-            //如果查不到用户行程
-            if (user_Itineraries.Count() == 0)
-            {
-                return -1;
-            }
-            // 1. 得到最大日期字符串
-            var maxDateStr = user_Itineraries
-              .Select(x => x.time)
-              .Max();
-            // 2. 根据最大日期字符串查找对象
-            var maxItinerary = user_Itineraries
-              .First(x => x.time == maxDateStr);
-            //获取用户最新经过地区的pos_id
-            string pos_id = maxItinerary.pos_id;
-            //根据该pos_id查询对应区域
-            List<regioninfo> regioninfos = new List<regioninfo>();
-            regioninfos = DbContext.db.Queryable<regioninfo>().Where(it => it.pos_id == pos_id).ToList();
-            //根据区域信息差风险等级表
-            List<dangerlevelinfo> dangerlevelinfos = new List<dangerlevelinfo>();
-            dangerlevelinfos = DbContext.db.Queryable<dangerlevelinfo>().Where(it => it.province == regioninfos[0].province
-            && it.city == regioninfos[0].city
-            && it.area == regioninfos[0].area).ToList();
-
-            return dangerlevelinfos[0].DangerLevel;
-        }
+        
         /// <summary>
         /// 修改用户信息的数据库操作
         /// </summary>
@@ -206,27 +116,70 @@ namespace test.Service.User
             });
             return data;
         }
+
         /// <summary>
-        /// 查询对应地区的医疗点信息
+        /// 查出谁是密接的服务，返回密接者的id列表
         /// </summary>
-        /// <param name="province"></param>
-        /// <param name="city"></param>
-        /// <param name="area"></param>
-        /// <param name="street"></param>
+        /// <param name="id"></param>
+        /// <param name="sick_time"></param>
         /// <returns></returns>
-        public List<hospital_info> SearchHosInfo(string province, string city, string area, string street)
+        public List<string> ContactManagement(string id,DateTime sick_time)
         {
-            ///根据地区信息找到pos_id
-            List<regioninfo> Regioninfo = DbContext.db.Queryable<regioninfo>().Where(it => it.province == province
-            && it.city == city && it.area == area && it.Street == street).ToList();
-            if (Regioninfo.Count == 0)
+            List<user_itinerary_dto> user_Itinerary_Dtos = new List<user_itinerary_dto>();
+            ///获取用户成为阳性前两个小时的所有pos_id和time
+            user_Itinerary_Dtos = DbContext.db.Queryable<user_itinerary>()
+              .Where(it => it.id == id &&
+                          it.time > sick_time.AddHours(-2) &&
+                          it.time < sick_time)
+              .Select(x => new user_itinerary_dto()
+              {
+                  pos_id = x.pos_id,
+                  time = x.time
+              })
+              .ToList();
+
+            // 1. sick用户行程记录
+            var sickItineraries = user_Itinerary_Dtos;
+
+            // 2. 记录所有密接用户id
+            List<string> contactIds = new List<string>();
+
+            foreach (var itinerary in sickItineraries)
             {
-                return new List<hospital_info>();
+                // pos_id和时间范围
+                var posId = itinerary.pos_id;
+                var time = itinerary.time;
+
+                // 3. 查询其他用户
+                var others = DbContext.db.Queryable<user_itinerary>()
+                  .Where(u => u.id != id && // 不包括sick用户自己
+                              u.pos_id == posId &&
+                              u.time > time.AddHours(-1) &&
+                              u.time < time.AddHours(1))
+                  .Select(u => u.id)
+                  .ToList();
+
+                // 4. 添加到结果集
+                contactIds.AddRange(others);
             }
-            string pos_id = Regioninfo[0].pos_id;
-            ///根据pos_id找到医疗点
-            List<hospital_info> hospital_Info = DbContext.db.Queryable<hospital_info>().Where(it => it.pos_id == pos_id).ToList();
-            return hospital_Info;
+            // 去重 contactIds
+            contactIds = contactIds.Distinct().ToList();
+            //这时候可能包含一些阳性用户被判定为密接，排除这些人
+            // 去除已确诊阳性用户
+            List<string> filteredContactIds = new List<string>();
+            foreach (var contactId in contactIds)
+            {
+                var userHealth = DbContext.db.Queryable<user_health_state>()
+                  .Where(u => u.id == contactId)
+                  .Select(u => u.current_status)
+                  .First();
+
+                if (userHealth != "阳性")
+                {
+                    filteredContactIds.Add(contactId);
+                }
+            }
+            return filteredContactIds;
         }
     }
 }
